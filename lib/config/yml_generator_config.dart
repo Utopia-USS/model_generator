@@ -12,6 +12,7 @@ import 'package:model_generator/model/item_type/object_type.dart';
 import 'package:model_generator/model/item_type/string_type.dart';
 import 'package:model_generator/model/model/model.dart';
 import 'package:model_generator/model/model/object_model.dart';
+import 'package:model_generator/util/case_util.dart';
 import 'package:model_generator/util/generic_type.dart';
 import 'package:model_generator/util/list_extensions.dart';
 import 'package:model_generator/util/type_checker.dart';
@@ -45,7 +46,7 @@ class YmlGeneratorConfig {
           fields.add(getField(propertyKey, propertyValue, isRequired: requiredFields?.contains(propertyKey) ?? false));
         });
         models.add(ObjectModel(
-          name: key,
+          name: CaseUtil(key).snakeCase,
           path: path,
           baseDirectory: baseDirectory,
           fields: fields,
