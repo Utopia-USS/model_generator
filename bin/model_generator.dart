@@ -36,12 +36,7 @@ void writeToFiles(PubspecConfig pubspecConfig, YmlGeneratorConfig modelGenerator
         yamlConfig: modelGeneratorConfig,
       ).write();
     }
-    File file;
-    if (model.path == null) {
-      file = File(join('lib', model.baseDirectory, '${model.fileName}.dart'));
-    } else {
-      file = File(join('lib', model.baseDirectory, model.path, '${model.fileName}.dart'));
-    }
+    final file = File(join('lib', model.baseDirectory, model.path, '${model.fileName}.dart'));
     if (!file.existsSync()) {
       file.createSync(recursive: true);
     }

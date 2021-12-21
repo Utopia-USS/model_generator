@@ -26,7 +26,6 @@ class YmlGeneratorConfig {
   YmlGeneratorConfig(PubspecConfig pubspecConfig, String configContent) {
     loadYaml(configContent).forEach((key, value) {
       final String baseDirectory = value['base_directory'] ?? pubspecConfig.baseDirectory;
-      final String? path = value['path'];
       final extraImports = value.containsKey('extra_imports') ? <String>[] : null;
 
       final description = value['description']?.toString();
@@ -46,8 +45,8 @@ class YmlGeneratorConfig {
           fields.add(getField(propertyKey, propertyValue, isRequired: requiredFields?.contains(propertyKey) ?? false));
         });
         models.add(ObjectModel(
-          name: CaseUtil(key).snakeCase,
-          path: path,
+          name: key,
+          path: CaseUtil(key).snakeCase,
           baseDirectory: baseDirectory,
           fields: fields,
           extraImports: extraImports,
