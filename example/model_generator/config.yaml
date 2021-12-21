@@ -1,0 +1,111 @@
+User:
+  type: object
+  properties:
+    subject:
+      type: object
+      $ref: '#/components/schemas/Subject'
+    status:
+      type: object
+      $ref: '#/components/schemas/UserStatus'
+    accounts:
+      description: Lista rachunków użytkownika, w postaci mapy. Kluczem jest numer rachunku.
+      type: object
+      additionalProperties:
+        type: object
+        $ref: '#/components/schemas/Account'
+    activeAccount:
+      type: object
+      $ref: '#/components/schemas/Account'
+Subject:
+  type: object
+  description: Podmiot zalogowanego użytkownika
+  properties:
+    id:
+      type: integer
+      description: ID podmiotu
+    firstName:
+      type: string
+      description: Imię zalogowanego użytkownika
+    lastName:
+      type: string
+      description: Nazwisko zalogowanego użytkownika
+    pesel:
+      type: string
+      description: Numer PESEL
+  example:
+    id: 42
+    firstName: "PAW"
+    lastName: "KOSMOSU"
+    pesel: "53060713700"
+UserStatus:
+  type: object
+  properties:
+    recentSuccessfulLogin:
+      type: string
+      description: Data ostatniego poprawnego logowania
+    recentFailureLogin:
+      type: string
+      description: Data ostatniego błędnego logowania
+Account:
+  type: object
+  properties:
+    accountNumber:
+      type: string
+      description: Numer rachunku
+    accountId:
+      type: integer
+      description: ID umowy
+    clientId:
+      type: integer
+      description: ID klienta
+    ownerFirstName:
+      type: string
+      description: Imię właściciela rachunku
+    ownerLastName:
+      type: string
+      description: Nazwisko właściciela rachunku
+  example:
+    accountNumber: "00-00-123456"
+    accountId: 42
+    clientId: 678
+    ownerFirstName: "JEREMI"
+    ownerLastName: "PRZYBORA"
+ArrayOfAccountInstruments:
+  type: array
+  items:
+    $ref: '#/components/schemas/AccountBalanceInstrument'
+    description: Instrument posiadany na rachunku
+AccountBalanceInstrument:
+  type: object
+  properties:
+    instrument:
+      type: object
+      $ref: '#/components/schemas/FinancialInstrument'
+      description: Liczba instrumentów dostępnych
+    available:
+      type: integer
+      description: Liczba instrumentów dostępnych
+    value:
+      type: number
+      description: Wartość
+    profitLoss:
+      type: number
+      description: Zysk / strata (w walucie)
+    profitLossPercent:
+      type: number
+      description: Zysk / strata %
+FinancialInstrument:
+  type: object
+  properties:
+    isin:
+      type: string
+      description: Kod ISIN
+    shortName:
+      type: string
+      description: Nazwa skrócona
+    semiName:
+      type: string
+      description: Nazwa półpełna
+    issuerId:
+      type: integer
+      description: ID emitenta
