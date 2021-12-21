@@ -6,14 +6,20 @@ import 'package:model_generator/model/model/object_model.dart';
 import 'package:model_generator/writer/object_model_writer.dart';
 import 'package:path/path.dart';
 
-void main(List<String> arguments) {
-  final pubspecConfig = PubspecConfig(projectName: "model_gene");
+Future<void> main(List<String> arguments) async {
+  final pubspecYaml = File(join(Directory.current.path, 'pubspec.yaml'));
+  if (!pubspecYaml.existsSync()) {
+    throw Exception('This program should be run from the root of a flutter/dart project');
+  }
+  final pubspecContent = pubspecYaml.readAsStringSync();
 
-  final file = File("assets/openapi.yaml");
+  final pubspecConfig = PubspecConfig.fromPubspecContent(pubspecContent);
+
+  final file = File(pubspecConfig.configPath);
   final modelGeneratorContent = file.readAsStringSync();
   final modelGeneratorConfig = YmlGeneratorConfig(pubspecConfig, modelGeneratorContent);
   writeToFiles(pubspecConfig, modelGeneratorConfig);
-  generateJsonGeneratedModels();
+  await generateJsonGeneratedModels();
 }
 
 void writeToFiles(PubspecConfig pubspecConfig, YmlGeneratorConfig modelGeneratorConfig) {
@@ -44,14 +50,11 @@ void writeToFiles(PubspecConfig pubspecConfig, YmlGeneratorConfig modelGenerator
 }
 
 Future<void> generateJsonGeneratedModels() async {
-  final result = Process.runSync('flutter', [
-    'packages',
-    'pub',
-    'run',
-    'build_runner',
-    'build',
-    '--delete-conflicting-outputs',
-  ]);
+  final result = Process.runSync(
+    'flutter',
+    ['packages', 'pub', 'run', 'build_runner', 'build', '--delete-conflicting-outputs'],
+    runInShell: true,
+  );
   if (result.exitCode == 0) {
     print('Successfully generated freezed files');
     print('');
