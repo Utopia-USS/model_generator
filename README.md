@@ -1,1 +1,1 @@
-# model_generator
+A simple command-line application.
